@@ -41,6 +41,7 @@ function gridify(array, n) {
 }
 
 async function queens() {
+  // Solution adapted from Donald Knuth's The Art of Computer Programming, Volume 4B, Section 7.2.2, Page 31
   const grid = await find(() =>
     document.querySelector("[data-testid=interactive-grid]"),
   );
@@ -92,6 +93,7 @@ async function queens() {
 }
 
 async function sudoku() {
+  // Simple backtracking solution, should be fast enough for a 6x6 board.
   const cells = await find(() =>
     document.getElementsByClassName("sudoku-cell-content"),
   );
@@ -161,6 +163,8 @@ async function sudoku() {
 }
 
 async function tango() {
+  // Also known as a binario puzzle or takuzu.
+  // Simple backtracking solution, should be fast enough for a 6x6 board.
   const grid = await find(() =>
     document.querySelector("[data-testid=interactive-grid]"),
   );
