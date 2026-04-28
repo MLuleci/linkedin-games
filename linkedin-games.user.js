@@ -41,14 +41,19 @@ function gridify(array, n) {
 }
 
 async function queens() {
-  // Solution adapted from Donald Knuth's The Art of Computer Programming, Volume 4B, Section 7.2.2, Page 31
   const grid = await find(() =>
     document.querySelector("[data-testid=interactive-grid]"),
   );
-  const N = 8;
-  const colors = Array.from(grid.children).map(
+  const regions = Array.from(grid.children).map(
     (c) => c.ariaLabel.split(",")[0],
   );
+  const uniqueRegions = new Set(regions);
+  const N = Math.sqrt(regions.length);
+
+  const covers = (perm) => {
+    const permRegions = new Set(perm.map((val, i) => regions[val + i * N]));
+    return permRegions.isSubsetOf(uniqueRegions);
+  };
 
   const property = (perm) => {
     for (let k = 0; k < perm.length; k++) {
@@ -59,7 +64,7 @@ async function queens() {
         if (j < k) {
           if (perm[k] == perm[j]) {
             return false; // On the same row
-          } else if (colors[k + perm[k] * N] == colors[j + perm[j] * N]) {
+          } else if (regions[k + perm[k] * N] == regions[j + perm[j] * N]) {
             return false; // In the same region
           }
         }
@@ -83,7 +88,7 @@ async function queens() {
     for (let i = 0; i < N; i++) {
       perm = extend(perm).filter(property);
     }
-    return perm[0];
+    return perm.filter(covers)[0];
   };
 
   console.time("queens");
@@ -93,7 +98,6 @@ async function queens() {
 }
 
 async function sudoku() {
-  // Simple backtracking solution, should be fast enough for a 6x6 board.
   const cells = await find(() =>
     document.getElementsByClassName("sudoku-cell-content"),
   );
@@ -163,8 +167,6 @@ async function sudoku() {
 }
 
 async function tango() {
-  // Also known as a binario puzzle or takuzu.
-  // Simple backtracking solution, should be fast enough for a 6x6 board.
   const grid = await find(() =>
     document.querySelector("[data-testid=interactive-grid]"),
   );
